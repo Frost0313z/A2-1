@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>여행 단어 학습 앱</title>
+<style>
+  :root{
+    --primary:#4A90E2;
+    --primary-dark:#3A78C2;
+    --bg:#FFFFFF;
+    --bg-soft:#F9F9F9;
+    --bg-header-soft:#F5F5F5;
+    --text-main:#1A1A1A;
+    --text-sub:#999999;
+    --text-sub2:#BDBDBD;
+    --red:#FF6B6B;
+    --gold:#FFD700;
+    --border:#EEEEEE;
+    --inactive:#D0D0D0;
+    --success-btn:#1A3A52;
+    --error:#EF5350;
+    --chip-bg:#E0ECFF;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:"Apple SD Gothic Neo","Malgun Gothic","Pretendard",-apple-system,sans-serif;
+    background:linear-gradient(160deg,#CFE4FB,#EAF3FD);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 16px;
+  }
+
+  /* ---------- Phone frame ---------- */
+  .phone{
+    width:375px;
+    height:812px;
+    background:#fff;
+    border-radius:44px;
+    border:10px solid #111;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 30px 60px rgba(0,0,0,0.25);
+    display:flex;
+    flex-direction:column;
+  }
+  .notch{
+    position:absolute;
+    top:10px; left:50%; transform:translateX(-50%);
+    width:150px; height:26px;
+    background:#111;
+    border-radius:0 0 18px 18px;
+    z-index:50;
+  }
+  .statusbar{
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 22px;
+    font-size:13px;
+    font-weight:600;
+    color:#fff;
+    position:relative;
+    z-index:20;
+    flex-shrink:0;
+  }
+  .statusbar .icons{display:flex; gap:5px; align-items:center;}
+  .screens-wrap{ position:relative; flex:1; overflow:hidden; }
+
+  /* ---------- Screen base ---------- */
+  .screen{
+    position:absolute; inset:0;
+    display:none;
+    flex-direction:column;
+    background:var(--bg);
+    animation:fadeIn .25s ease;
+  }
+  .screen.active{ display:flex; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+
+  .header{
+    background:linear-gradient(135deg,var(--primary),#5AA0EE);
+    flex-shrink:0;
+    position:relative;
+    padding-bottom:6px;
+  }
+  .header .statusbar{ padding-top:2px; }
+  .header-title{
+    text-align:center;
+    color:#fff;
+    font-weight:700;
+    font-size:19px;
+    padding:8px 0 16px;
+  }
+  .header-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 20px 16px;
+  }
+  .back-btn{
+    background:none; border:none; color:#fff; font-size:22px; cursor:pointer;
+    width:32px; text-align:left;
+  }
+  .content{ flex:1; overflow-y:auto; -ms-overflow-style:none; scrollbar-width:none;}
+  .content::-webkit-scrollbar{ display:none; }
+
+  /* ---------- Bottom Nav ---------- */
+  .navbar{
+    display:flex;
+    border-top:1px solid var(--border);
+    background:#fff;
+    flex-shrink:0;
+    padding:8px 0 10px;
+  }
+  .nav-item{
+    flex:1;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    background:none; border:none; cursor:pointer;
+    color:var(--inactive);
+    font-size:10px;
+    font-weight:500;
+  }
+  .nav-item svg{ width:24px; height:24px; stroke:var(--inactive); fill:none; stroke-width:1.8;}
+  .nav-item.active{ color:var(--primary); }
+  .nav-item.active svg{ stroke:var(--primary); }
+
+  /* ================= HOME ================= */
+  #home .header{ padding-bottom:0; border-radius:0 0 28px 28px;}
+  .home-greet{ padding:4px 24px 26px; color:#fff; }
+  .home-greet h1{ font-size:24px; font-weight:800; margin-bottom:6px;}
+  .home-greet p{ font-size:14px; font-weight:400; opacity:.95;}
+  .dday-chip{
+    position:absolute; top:44px; right:20px;
+    background:var(--chip-bg);
+    color:#fff;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    display:flex; align-items:center; gap:5px;
+  }
+  .home-body{ padding:24px 20px 0; }
+  .progress-card{
+    display:flex; flex-direction:column; align-items:center;
+    padding:20px 0 8px;
+  }
+  .donut-wrap{ position:relative; width:170px; height:170px; }
+  .donut-wrap svg{ transform:rotate(-90deg); }
+  .donut-center{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .donut-center .pct{ font-size:32px; font-weight:800; color:var(--primary); }
+  .donut-center .lbl{ font-size:12px; color:var(--text-sub); margin-top:2px; text-align:center; max-width:110px;}
+  .stat-cards{ display:flex; gap:12px; margin:22px 0; }
+  .stat-card{
+    flex:1; background:#fff; border-radius:14px; box-shadow:var(--shadow);
+    padding:14px 12px; display:flex; align-items:center; gap:10px;
+    border:1px solid var(--border);
+  }
+  .stat-card .emoji{ font-size:26px; }
+  .stat-card .txt{ font-size:13px; font-weight:700; color:var(--text-main); line-height:1.3;}
+  .stat-card.points .txt{ color:var(--primary); }
+  .cta-btn{
+    width:100%;
+    background:var(--success-btn);
+    color:#fff;
+    border:none;
+    border-radius:24px;
+    height:54px;
+    font-size:15px;
+    font-weight:700;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:var(--shadow);
+    cursor:pointer;
+    margin-bottom:20px;
+  }
+
+  /* ================= CATEGORY ================= */
+  .cat-grid{
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:16px; padding:24px 20px 0;
+  }
+  .cat-card{
+    background:#fff; border:1px solid var(--border); border-radius:14px;
+    box-shadow:var(--shadow);
+    height:150px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:12px;
+    cursor:pointer;
+    transition:transform .12s;
+  }
+  .cat-card:active{ transform:scale(.96); }
+  .cat-card svg{ width:46px; height:46px; stroke:var(--primary); fill:none; stroke-width:1.6;}
+  .cat-card span{ font-size:15px; font-weight:700; color:var(--text-main); }
+  .more-btn{
+    display:block; width:calc(100% - 40px); margin:24px auto 20px;
+    background:#fff; border:2px solid var(--primary); color:var(--primary);
+    border-radius:12px; height:48px; font-size:14px; font-weight:700;
+    cursor:pointer;
+  }
+  .more-cats{ display:none; }
+  .more-cats.show{ display:contents; }
+
+  /* ================= WORD LEARNING ================= */
+  .progress-pill{ color:#fff; font-size:13px; font-weight:600; }
+  .word-body{ flex:1; display:flex; flex-direction:column; align-items:center; padding:30px 24px; }
+  .flip-scene{ width:100%; max-width:280px; height:340px; perspective:1200px; margin-bottom:36px; }
+  .flip-card{
+    width:100%; height:100%; position:relative;
+    transform-style:preserve-3d;
+    transition:transform .5s cubic-bezier(.4,.2,.2,1);
+    cursor:pointer;
+  }
+  .flip-card.flipped{ transform:rotateY(180deg); }
+  .flip-face{
+    position:absolute; inset:0;
+    background:#fff; border-radius:20px; box-shadow:var(--shadow); border:1px solid var(--border);
+    backface-visibility:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:20px;
+    text-align:center;
+  }
+  .flip-front .word{ font-size:28px; font-weight:800; color:var(--primary); letter-spacing:.5px; word-break:break-word;}
+  .flip-front .phon{ font-size:13px; color:var(--text-sub); margin-top:10px; }
+  .flip-back{ transform:rotateY(180deg); background:var(--bg-soft); }
+  .flip-back .kmeaning{ font-size:24px; font-weight:800; color:var(--text-main); }
+  .flip-back .khint{ font-size:12px; color:var(--text-sub); margin-top:10px; }
+  .card-icons{
+    position:absolute; bottom:16px; left:0; right:0;
+    display:flex; justify-content:space-between; padding:0 20px;
+  }
+  .icon-btn{ background:none; border:none; cursor:pointer; }
+  .icon-btn svg{ width:22px; height:22px; stroke:var(--primary); fill:none; stroke-width:1.8; }
+  .icon-btn.star.filled svg{ fill:var(--primary); }
+  .flip-hint{ font-size:12px; color:var(--text-sub2); margin-bottom:26px; }
+
+  .check-btns{ display:flex; gap:44px; margin-top:auto; padding-bottom:14px; }
+  .round-btn{
+    width:62px; height:62px; border-radius:50%; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:var(--shadow);
+    transition:transform .12s;
+  }
+  .round-btn:active{ transform:scale(.9); }
+  .round-btn svg{ width:26px; height:26px; stroke:#fff; stroke-width:3; fill:none; }
+  .round-btn.wrong{ background:var(--error); }
+  .round-btn.right{ background:var(--primary); }
+  .feedback-banner{
+    text-align:center; font-size:13px; font-weight:700; height:20px; margin-bottom:8px;
+  }
+  .feedback-banner.wrong-txt{ color:var(--error); }
+  .feedback-banner.right-txt{ color:var(--primary); }
+
+  .done-panel{ text-align:center; margin:auto; }
+  .done-panel .big{ font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:8px;}
+  .done-panel .sub{ font-size:13px; color:var(--text-sub); margin-bottom:24px;}
+  .done-panel button{
+    background:var(--success-btn); color:#fff; border:none; border-radius:20px;
+    padding:12px 26px; font-weight:700; font-size:14px; cursor:pointer;
+  }
+
+  /* ================= RANKING ================= */
+  #ranking .header{ padding-bottom:0; }
+  .top3{ background:var(--bg-soft); padding:22px 16px 26px; display:flex; align-items:flex-end; justify-content:center; gap:14px; }
+  .rank-user{ display:flex; flex-direction:column; align-items:center; }
+  .rank-user .avatar{
+    border-radius:50%; background:#DCEBFB; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .rank-user .avatar svg{ stroke:#7FAEE0; fill:none; stroke-width:1.4; }
+  .rank-user.gold .avatar{ width:80px; height:80px; }
+  .rank-user.silver .avatar, .rank-user.bronze .avatar{ width:64px; height:64px; }
+  .medal{ position:absolute; top:-10px; right:-6px; font-size:20px; }
+  .rank-user .name{ font-weight:700; font-size:14px; margin-top:8px; }
+  .rank-user .pts{ font-weight:800; color:var(--primary); font-size:15px; margin-top:2px;}
+  .rank-user.gold .name{ font-size:16px; }
+  .rank-user.gold .pts{ font-size:18px; }
+
+  .rank-table{ padding:0 0 10px; }
+  .rank-head{
+    display:flex; background:var(--bg-header-soft); color:var(--text-sub);
+    font-size:11px; padding:10px 20px; border-bottom:1px solid var(--border);
+  }
+  .rank-head span:nth-child(1){ width:20%; }
+  .rank-head span:nth-child(2){ width:50%; text-align:center; }
+  .rank-head span:nth-child(3){ width:30%; text-align:right; }
+  .rank-row{
+    display:flex; align-items:center; padding:13px 20px;
+    border-bottom:1px solid var(--border); font-size:14px;
+  }
+  .rank-row .r{ width:20%; font-weight:600; }
+  .rank-row .n{ width:50%; text-align:center; }
+  .rank-row .p{ width:30%; text-align:right; color:var(--primary); font-weight:700; }
+
+  /* ================= SETTINGS ================= */
+  .set-list{ padding:8px 20px 20px; }
+  .set-item{
+    display:flex; align-items:center; padding:16px 4px; border-bottom:1px solid var(--border); gap:14px; cursor:pointer;
+  }
+  .set-item svg{ width:24px; height:24px; stroke:var(--primary); fill:none; stroke-width:1.6; flex-shrink:0;}
+  .set-item .label{ flex:1; font-size:15px; font-weight:600; color:var(--text-main); }
+  .set-item .sub{ font-size:13px; color:var(--text-sub); margin-right:4px; }
+  .set-item .chev{ color:var(--text-sub); font-size:14px; }
+  .toggle{
+    width:44px; height:24px; border-radius:14px; background:var(--inactive);
+    position:relative; flex-shrink:0; cursor:pointer; transition:background .2s;
+  }
+  .toggle.on{ background:var(--primary); }
+  .toggle::after{
+    content:''; position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%;
+    background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:left .2s;
+  }
+  .toggle.on::after{ left:22px; }
+
+  .credit{ text-align:center; font-size:11px; color:var(--text-sub2); margin-top:10px; }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="notch"></div>
+
+  <div class="screens-wrap">
+
+    <!-- ============ HOME ============ -->
+    <div class="screen active" id="home">
+      <div class="header">
+        <div class="statusbar">
+          <span>10:09 AM</span>
+          <span class="icons">📶 🛜 🔋</span>
+        </div>
+        <div class="dday-chip">✈️ 뉴욕까지 D-15</div>
+        <div class="home-greet">
+          <h1>안녕하세요!</h1>
+          <p>오늘도 함께 학습해요!</p>
+        </div>
+      </div>
+      <div class="content">
+        <div class="home-body">
+          <div class="progress-card">
+            <div class="donut-wrap">
+              <svg width="170" height="170" viewBox="0 0 170 170">
+                <circle cx="85" cy="85" r="72" fill="none" stroke="#E0E0E0" stroke-width="16"/>
+                <circle cx="85" cy="85" r="72" fill="none" stroke="#4A90E2" stroke-width="16"
+                  stroke-linecap="round"
+                  stroke-dasharray="452"
+                  stroke-dashoffset="113"/>
+              </svg>
+              <div class="donut-center">
+                <div class="pct">75%</div>
+                <div class="lbl">오늘의 학습 목표 달성률</div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-cards">
+            <div class="stat-card"><span class="emoji">🔥</span><span class="txt">7일 연속<br>학습</span></div>
+            <div class="stat-card points"><span class="emoji">⭐</span><span class="txt">1,240<br>포인트</span></div>
+          </div>
+          <button class="cta-btn" onclick="goCategory()">▶ 이어서 학습하기 &nbsp;›</button>
+        </div>
+      </div>
+      <div class="navbar" id="nav-home"></div>
+    </div>
+
+    <!-- ============ CATEGORY ============ -->
+    <div class="screen" id="category">
+      <div class="header">
+        <div class="statusbar"><span>10:09 AM</span><span class="icons">📶 🛜 🔋</span></div>
+        <div class="header-title">카테고리</div>
+      </div>
+      <div class="content">
+        <div class="cat-grid" id="cat-grid"></div>
+        <button class="more-btn" id="more-btn" onclick="toggleMore()">더보기 ⌄</button>
+      </div>
+      <div class="navbar" id="nav-category"></div>
+    </div>
+
+    <!-- ============ WORD LEARNING ============ -->
+    <div class="screen" id="learn">
+      <div class="header">
+        <div class="statusbar"><span>10:09 AM</span><span class="icons">📶 🛜 🔋</span></div>
+        <div class="header-row">
+          <button class="back-btn" onclick="goCategory()">←</button>
+          <div class="header-title" style="padding:0;" id="learn-title">단어 학습</div>
+          <div class="progress-pill" id="learn-progress">1/6</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="word-body" id="learn-active">
+          <div class="feedback-banner" id="feedback"></div>
+          <div class="flip-scene">
+            <div class="flip-card" id="flip-card" onclick="flipCard(event)">
+              <div class="flip-face flip-front">
+                <div class="word" id="word-en">RESERVATION</div>
+                <div class="phon" id="word-phon">/ˌrezərˈveɪʃən/</div>
+                <div class="card-icons">
+                  <button class="icon-btn" onclick="speak(event)"><svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16 8a5 5 0 010 8"/></svg></button>
+                  <button class="icon-btn star" id="star-btn" onclick="toggleStar(event)"><svg viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/></svg></button>
+                </div>
+              </div>
+              <div class="flip-face flip-back">
+                <div class="kmeaning" id="word-ko">예약</div>
+                <div class="khint">카드를 다시 눌러 단어 보기</div>
+              </div>
+            </div>
+          </div>
+          <div class="flip-hint">카드를 눌러 뜻 확인하기</div>
+          <div class="check-btns">
+            <button class="round-btn wrong" onclick="mark(false)"><svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></button>
+            <button class="round-btn right" onclick="mark(true)"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></button>
+          </div>
+        </div>
+        <div class="done-panel" id="learn-done" style="display:none;">
+          <div class="big">🎉 학습 완료!</div>
+          <div class="sub" id="done-sub">이 카테고리의 단어를 모두 학습했어요.</div>
+          <button onclick="goCategory()">카테고리로 돌아가기</button>
+        </div>
+      </div>
+      <div class="navbar" id="nav-learn"></div>
+    </div>
+
+    <!-- ============ RANKING ============ -->
+    <div class="screen" id="ranking">
+      <div class="header" style="padding-bottom:0;">
+        <div class="statusbar"><span>10:09 AM</span><span class="icons">📶 🛜 🔋</span></div>
+        <div class="header-title">랭킹</div>
+      </div>
+      <div class="content">
+        <div class="top3">
+          <div class="rank-user silver">
+            <div class="avatar"><svg width="36" height="36" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span class="medal">🥈</span></div>
+            <div class="name">이민준</div><div class="pts">12,450</div>
+          </div>
+          <div class="rank-user gold">
+            <div class="avatar"><svg width="44" height="44" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span class="medal">🥇</span></div>
+            <div class="name">김하늘</div><div class="pts">15,230</div>
+          </div>
+          <div class="rank-user bronze">
+            <div class="avatar"><svg width="36" height="36" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span class="medal">🥉</span></div>
+            <div class="name">박서연</div><div class="pts">10,870</div>
+          </div>
+        </div>
+        <div class="rank-table">
+          <div class="rank-head"><span>순위</span><span>이름</span><span>학습 포인트</span></div>
+          <div id="rank-rows"></div>
+        </div>
+      </div>
+      <div class="navbar" id="nav-ranking"></div>
+    </div>
+
+    <!-- ============ SETTINGS ============ -->
+    <div class="screen" id="settings">
+      <div class="header">
+        <div class="statusbar"><span>10:09 AM</span><span class="icons">📶 🛜 🔋</span></div>
+        <div class="header-title">설정</div>
+      </div>
+      <div class="content">
+        <div class="set-list">
+          <div class="set-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.5"/></svg><span class="label">일일 학습 목표</span><span class="sub">20단어</span><span class="chev">›</span></div>
+          <div class="set-item"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span class="label">여행 목적지</span><span class="sub">뉴욕</span><span class="chev">›</span></div>
+          <div class="set-item"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg><span class="label">여행 날짜</span><span class="sub">2026.08.15</span><span class="chev">›</span></div>
+          <div class="set-item" onclick="toggleSetting(this)"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg><span class="label">알림</span><div class="toggle on"></div></div>
+          <div class="set-item" onclick="toggleSetting(this)"><svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg><span class="label">다크 모드</span><div class="toggle"></div></div>
+        </div>
+        <div class="credit">여행 단어 학습 v1.0</div>
+      </div>
+      <div class="navbar" id="nav-settings"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ---------------- Nav icons ---------------- */
+const navIcons = [
+  {id:'home', label:'홈', svg:'<path d="M4 11l8-7 8 7"/><path d="M6 10v9h5v-5h2v5h5v-9"/>'},
+  {id:'category', label:'카테고리', svg:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>'},
+  {id:'ranking', label:'랭킹', svg:'<path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M7 6H4a3 3 0 003 5"/><path d="M17 6h3a3 3 0 01-3 5"/>'},
+  {id:'settings', label:'설정', svg:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.6V21a2 2 0 11-4 0v-.2a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.6-1H3a2 2 0 110-4h.2a1.7 1.7 0 001.6-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.6V3a2 2 0 114 0v.2a1.7 1.7 0 001 1.6 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.6 1H21a2 2 0 110 4h-.2a1.7 1.7 0 00-1.6 1z"/>'}
+];
+function buildNav(activeId, containerId){
+  const c = document.getElementById(containerId);
+  c.innerHTML = navIcons.map(n => `
+    <button class="nav-item ${n.id===activeId?'active':''}" onclick="showScreen('${n.id}')">
+      <svg viewBox="0 0 24 24">${n.svg}</svg>
+      <span>${n.label}</span>
+    </button>`).join('');
+}
+buildNav('home','nav-home');
+buildNav('category','nav-category');
+buildNav('category','nav-learn'); // learn screen keeps nav visually inactive-ish but functional
+buildNav('ranking','nav-ranking');
+buildNav('settings','nav-settings');
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goCategory(){ showScreen('category'); }
+
+/* ---------------- Category + word data ---------------- */
+const categories = [
+  {id:'airport', label:'공항', icon:'<path d="M2 16l20-7-2 7-20 5z"/><path d="M9 13l4 8 3-1-2-9"/>', words:[
+    {en:'RESERVATION', phon:'/ˌrezərˈveɪʃən/', ko:'예약'},
+    {en:'BOARDING PASS', phon:'/ˈbɔːrdɪŋ pæs/', ko:'탑승권'},
+    {en:'PASSPORT', phon:'/ˈpæspɔːrt/', ko:'여권'},
+    {en:'DEPARTURE', phon:'/dɪˈpɑːrtʃər/', ko:'출발'},
+    {en:'ARRIVAL', phon:'/əˈraɪvəl/', ko:'도착'},
+    {en:'LUGGAGE', phon:'/ˈlʌɡɪdʒ/', ko:'수하물'},
+  ]},
+  {id:'hotel', label:'호텔', icon:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 21v-5h6v5"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2"/>', words:[
+    {en:'CHECK-IN', phon:'/tʃek ɪn/', ko:'체크인'},
+    {en:'RECEPTION', phon:'/rɪˈsepʃən/', ko:'프런트'},
+    {en:'KEY CARD', phon:'/kiː kɑːrd/', ko:'객실 카드키'},
+    {en:'VACANCY', phon:'/ˈveɪkənsi/', ko:'빈 방'},
+    {en:'ROOM SERVICE', phon:'/ruːm ˈsɜːrvɪs/', ko:'룸서비스'},
+  ]},
+  {id:'food', label:'음식', icon:'<path d="M6 2v8M4 2v8M8 2v8M6 10v12"/><path d="M17 2c-2 0-3 2-3 5s1 5 3 5v10"/>', words:[
+    {en:'MENU', phon:'/ˈmenjuː/', ko:'메뉴'},
+    {en:'APPETIZER', phon:'/ˈæpɪtaɪzər/', ko:'애피타이저'},
+    {en:'RECEIPT', phon:'/rɪˈsiːt/', ko:'영수증'},
+    {en:'BEVERAGE', phon:'/ˈbevərɪdʒ/', ko:'음료'},
+    {en:'TAKEOUT', phon:'/ˈteɪkaʊt/', ko:'포장'},
+  ]},
+  {id:'shopping', label:'쇼핑', icon:'<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/>', words:[
+    {en:'DISCOUNT', phon:'/ˈdɪskaʊnt/', ko:'할인'},
+    {en:'FITTING ROOM', phon:'/ˈfɪtɪŋ ruːm/', ko:'탈의실'},
+    {en:'CASHIER', phon:'/kæˈʃɪr/', ko:'계산원'},
+    {en:'REFUND', phon:'/ˈriːfʌnd/', ko:'환불'},
+    {en:'RECEIPT', phon:'/rɪˈsiːt/', ko:'영수증'},
+  ]},
+  {id:'transport', label:'교통', icon:'<rect x="4" y="6" width="16" height="10" rx="2"/><circle cx="8" cy="18" r="1.5"/><circle cx="16" cy="18" r="1.5"/>', words:[
+    {en:'SUBWAY', phon:'/ˈsʌbweɪ/', ko:'지하철'},
+    {en:'FARE', phon:'/fer/', ko:'요금'},
+    {en:'TRANSFER', phon:'/trænsˈfɜːr/', ko:'환승'},
+    {en:'PLATFORM', phon:'/ˈplætfɔːrm/', ko:'승강장'},
+  ]},
+  {id:'emergency', label:'응급', icon:'<path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z"/><path d="M12 8v6M9 11h6"/>', words:[
+    {en:'HOSPITAL', phon:'/ˈhɑːspɪtl/', ko:'병원'},
+    {en:'PHARMACY', phon:'/ˈfɑːrməsi/', ko:'약국'},
+    {en:'AMBULANCE', phon:'/ˈæmbjələns/', ko:'구급차'},
+    {en:'INSURANCE', phon:'/ɪnˈʃʊrəns/', ko:'보험'},
+  ]},
+];
+
+const grid = document.getElementById('cat-grid');
+grid.innerHTML = categories.map((c,i)=>`
+  <div class="cat-card ${i>=4?'more-hidden':''}" style="${i>=4?'display:none':''}" onclick="startLearn('${c.id}')">
+    <svg viewBox="0 0 24 24">${c.icon}</svg>
+    <span>${c.label}</span>
+  </div>`).join('');
+
+let moreShown = false;
+function toggleMore(){
+  moreShown = !moreShown;
+  document.querySelectorAll('.more-hidden').forEach(el=> el.style.display = moreShown ? 'flex' : 'none');
+  document.getElementById('more-btn').textContent = moreShown ? '접기 ⌃' : '더보기 ⌄';
+}
+
+/* ---------------- Word learning logic ---------------- */
+let currentCat = null, currentIndex = 0, flipped = false, results = [];
+
+function startLearn(catId){
+  currentCat = categories.find(c=>c.id===catId);
+  currentIndex = 0;
+  results = [];
+  document.getElementById('learn-title').textContent = currentCat.label + ' 단어 학습';
+  document.getElementById('learn-active').style.display = 'flex';
+  document.getElementById('learn-done').style.display = 'none';
+  renderWord();
+  showScreen('learn');
+}
+
+function renderWord(){
+  const w = currentCat.words[currentIndex];
+  document.getElementById('word-en').textContent = w.en;
+  document.getElementById('word-phon').textContent = w.phon;
+  document.getElementById('word-ko').textContent = w.ko;
+  document.getElementById('learn-progress').textContent = `${currentIndex+1}/${currentCat.words.length}`;
+  document.getElementById('flip-card').classList.remove('flipped');
+  document.getElementById('star-btn').classList.remove('filled');
+  flipped = false;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback-banner';
+}
+
+function flipCard(e){
+  flipped = !flipped;
+  document.getElementById('flip-card').classList.toggle('flipped', flipped);
+}
+function speak(e){
+  e.stopPropagation();
+  const w = currentCat.words[currentIndex];
+  if('speechSynthesis' in window){
+    const u = new SpeechSynthesisUtterance(w.en);
+    u.lang = 'en-US';
+    speechSynthesis.speak(u);
+  }
+}
+function toggleStar(e){
+  e.stopPropagation();
+  document.getElementById('star-btn').classList.toggle('filled');
+}
+
+function mark(correct){
+  results.push(correct);
+  const fb = document.getElementById('feedback');
+  fb.textContent = correct ? '정답이에요! 👍' : '다시 확인해봐요';
+  fb.className = 'feedback-banner ' + (correct ? 'right-txt' : 'wrong-txt');
+  setTimeout(()=>{
+    currentIndex++;
+    if(currentIndex >= currentCat.words.length){
+      const correctCount = results.filter(Boolean).length;
+      document.getElementById('done-sub').textContent = `${currentCat.words.length}개 중 ${correctCount}개를 맞혔어요.`;
+      document.getElementById('learn-active').style.display = 'none';
+      document.getElementById('learn-done').style.display = 'block';
+    } else {
+      renderWord();
+    }
+  }, 350);
+}
+
+/* ---------------- Ranking data ---------------- */
+const rankData = [
+  [4,'최지우','9,620'],[5,'정우진','8,340'],[6,'유은경','7,510'],
+  [7,'조윤우','6,880'],[8,'이다인','6,100'],[9,'송민석','5,450'],[10,'강채원','4,920']
+];
+document.getElementById('rank-rows').innerHTML = rankData.map(r=>`
+  <div class="rank-row"><span class="r">${r[0]}</span><span class="n">${r[1]}</span><span class="p">${r[2]}</span></div>
+`).join('');
+
+/* ---------------- Settings toggles ---------------- */
+function toggleSetting(item){
+  const t = item.querySelector('.toggle');
+  t.classList.toggle('on');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# 비밀번호 등 민감정보
+.env
+
+# OS / OneDrive junk
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Office lock files
+~$*
+
+# Editor
+.vscode/
