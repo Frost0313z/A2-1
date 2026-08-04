@@ -28,6 +28,15 @@
 
 새 차시가 시작되면 `<차시 번호>. <차시명>/materials`, `output`, `assets` 3개 폴더를 만들고 시작하면 됩니다.
 
+Python 프로젝트가 결과물인 미션은 `scripts/new_mission.py`로 표준 구조를 자동 생성할 수 있습니다.
+
+```bash
+python scripts/new_mission.py 02 "02. Python 심화" todo-cli \
+  --description "터미널 할 일 관리 프로그램" --github
+```
+
+`<stage> <session_name> <project_name>` 순서로 받아 `output/<project_name>/`에 표준 파이썬 프로젝트(main.py + 패키지 + .gitignore + README)를 만들고 git init·첫 커밋까지 수행합니다. `--github`를 주면 GitHub 저장소 생성과 push까지 이어서 합니다. 이 프로젝트 경로는 자체 GitHub 저장소로 별도 관리되므로 루트 `.gitignore`에 자동으로 추가됩니다.
+
 ## 진행 현황
 
 - [x] 01 - 02. 멀티모달 콘텐츠 제작
