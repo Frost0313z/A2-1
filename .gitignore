@@ -11,3 +11,6 @@ desktop.ini
 
 # Editor
 .vscode/
+
+# 미션별 독립 프로젝트 (자체 GitHub 저장소로 별도 관리)
+02. AI 활용 학습/01. Python 및 Git 기초/output/prompt-manager/

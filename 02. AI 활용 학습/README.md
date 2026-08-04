@@ -6,4 +6,5 @@
 
 ## 차시 목록
 
-(진행하며 추가)
+- [01. Python 및 Git 기초](./01.%20Python%20및%20Git%20기초/) — 프롬프트 관리 콘솔 프로그램 (Python + Git/GitHub 실습)
+  GitHub: https://github.com/Frost0313z/prompt-manager
