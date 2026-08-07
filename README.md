@@ -51,7 +51,9 @@ python scripts/new_mission.py env-doc "02. AI 활용 학습/01. Python 및 Git �
 
 - [x] 01 - 02. 멀티모달 콘텐츠 제작
 - [x] 01 - 04. AI기반 UIUX 디자인 시안 제작
-- [x] 02 - 01. Python 및 Git 기초
+- [x] 02 - 01. Python 및 Git 기초 — [prompt-manager](https://github.com/Frost0313z/prompt-manager)
+- [x] 02 - 02. Python 응용 API 활용 국내 여행지 추천 프로그램 개발 — [travel-planner](https://github.com/Frost0313z/travel-planner)
+- [x] 02 - 03. AI 웹 개발 — [fridge-chef](https://github.com/Frost0313z/fridge-chef) *(Vercel 배포 예정)*
 - [ ] 03. AI 응용 학습 (예정)
 
 새 차시를 추가할 때마다 이 목록을 갱신합니다.

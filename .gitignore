@@ -1,5 +1,6 @@
 # 비밀번호 등 민감정보
 .env
+api.txt
 
 # OS / OneDrive junk
 Thumbs.db
@@ -8,6 +9,9 @@ desktop.ini
 
 # Office lock files
 ~$*
+
+# 실수로 생긴 빈 문서
+새 텍스트 문서*.txt
 
 # Editor
 .vscode/
@@ -19,3 +23,9 @@ __pycache__/
 
 # 미션별 독립 프로젝트 (자체 GitHub 저장소로 별도 관리)
 02. AI 활용 학습/01. Python 및 Git 기초/output/prompt-manager/
+
+# travel-planner 미션 (자체 GitHub 저장소로 별도 관리)
+02. AI 활용 학습/02. Python 응용 API 활용 국내 여행지 추천 프로그램 개발/output/travel-planner/
+
+# fridge-chef 미션 (자체 GitHub 저장소로 별도 관리)
+02. AI 활용 학습/03. AI 웹 개발/output/fridge-chef/
