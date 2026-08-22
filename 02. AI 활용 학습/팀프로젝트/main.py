@@ -27,6 +27,10 @@ from dotenv import load_dotenv
 from matplotlib.patches import Rectangle
 from openai import OpenAI
 
+# 그래프와 이미지에 한글이 네모로 깨지지 않도록 Windows 한글 폰트를 사용합니다.
+plt.rcParams["font.family"] = "Malgun Gothic"
+plt.rcParams["axes.unicode_minus"] = False
+
 
 # ====================================================================
 # 0. 준비하기
