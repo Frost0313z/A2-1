@@ -12,11 +12,11 @@
 
 | 로고 시안 1 | 로고 시안 2 |
 |---|---|
-| ![로고 시안 1](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/logo_01.png) | ![로고 시안 2](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/logo_02.png) |
+| ![로고 시안 1](output/logo_01.png) | ![로고 시안 2](output/logo_02.png) |
 
 ### 브랜드 컬러 팔레트
 
-![브랜드 컬러 팔레트 - 한글 적용](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/brand_color_palette_ko.png)
+![브랜드 컬러 팔레트 - 한글 적용](output/brand_color_palette_ko.png)
 
 ## 주요 기능
 
@@ -47,7 +47,7 @@ output/brand_result.json + PNG 결과물
 ## 프로젝트 위치
 
 ```text
-02. AI 활용 학습/팀프로젝트/
+A2-1/
 ├── main.py                 # 모든 기능을 합친 최종 실행 파일
 ├── Naming.py               # 네이밍·슬로건 담당 원본
 ├── content.py              # 브랜드 스토리 담당 원본
@@ -69,7 +69,7 @@ output/brand_result.json + PNG 결과물
 
 ```bash
 git clone https://github.com/Frost0313z/A2-1.git
-cd A2-1/"02. AI 활용 학습/팀프로젝트"
+cd A2-1
 ```
 
 ### 2. 가상환경 생성 및 활성화
