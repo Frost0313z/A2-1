@@ -1,59 +1,155 @@
-# 코디세이 과제
+# A2-1 브랜드 아이덴티티 생성기
 
-코디세이 **AI 네이티브 과정**(최대 5개월) 학습 기록 및 과제 저장소.
-과정 소개: https://codyssey.kr/daejeon/apply/course
+> 냉장고 속 재료로 오늘의 한 끼를 제안하는 푸드테크 서비스를 위한 AI 브랜드 제작 프로젝트
 
-## 과정 개요
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-API-412991?logo=openai&logoColor=white)
+![Project](https://img.shields.io/badge/Codyssey-Term%20Project-F97316)
 
-| 단계 | 기간 | 내용 |
+브랜드 브리프 하나를 입력하면 AI가 브랜드명, 슬로건, 스토리, 컬러 팔레트와 로고 시안을 순서대로 생성합니다. 팀원이 나누어 만든 기능을 `main.py` 하나에 통합해 전체 과정을 한 번에 실행할 수 있습니다.
+
+## 결과 미리보기
+
+| 로고 시안 1 | 로고 시안 2 |
+|---|---|
+| ![로고 시안 1](02.%20AI%20활용%20학습/팀프로젝트/output/logo_01.png) | ![로고 시안 2](02.%20AI%20활용%20학습/팀프로젝트/output/logo_02.png) |
+
+![브랜드 컬러 팔레트](02.%20AI%20활용%20학습/팀프로젝트/output/color_palette.png)
+
+## 주요 기능
+
+- 브랜드명 후보 3~5개와 의미 생성
+- 브랜드 톤에 맞는 슬로건 3개 생성
+- 탄생 배경과 철학을 담은 브랜드 스토리 생성
+- 메인 컬러 1개와 서브 컬러 2~3개 추천
+- 컬러 팔레트 PNG 자동 제작
+- 서로 다른 방향의 로고 시안 2개 생성
+- 모든 결과를 `brand_result.json`으로 통합 저장
+
+## 동작 흐름
+
+```text
+brief.json
+    ↓
+브랜드 네이밍과 슬로건
+    ↓
+브랜드 스토리
+    ↓
+컬러 팔레트
+    ↓
+로고 시안 2개
+    ↓
+output/brand_result.json + PNG 결과물
+```
+
+## 프로젝트 위치
+
+```text
+02. AI 활용 학습/팀프로젝트/
+├── main.py                 # 모든 기능을 합친 최종 실행 파일
+├── Naming.py               # 네이밍·슬로건 담당 원본
+├── content.py              # 브랜드 스토리 담당 원본
+├── visual.py               # 컬러·로고 담당 원본
+├── brief.json              # 브랜드 입력 정보
+├── .env.example            # 환경변수 작성 예시
+├── requirements.txt        # 필요한 파이썬 패키지
+└── output/
+    ├── brand_result.json
+    ├── color_palette.png
+    ├── logo_01.png
+    └── logo_02.png
+```
+
+## 시작하기
+
+### 1. 저장소 복제
+
+```bash
+git clone https://github.com/Frost0313z/A2-1.git
+cd A2-1/"02. AI 활용 학습/팀프로젝트"
+```
+
+### 2. 가상환경 생성 및 활성화
+
+Windows PowerShell:
+
+```powershell
+python -m venv venv
+venv\Scripts\Activate.ps1
+```
+
+macOS 또는 Linux:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. 패키지 설치
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. API 키 설정
+
+`.env.example`을 복사해 `.env` 파일을 만들고 본인의 API 키를 입력합니다.
+
+```env
+OPENAI_API_KEY=여기에_본인의_API_키_입력
+
+OPENAI_MODEL=gpt-4o-mini
+OPENAI_TEXT_MODEL=gpt-4.1-mini
+OPENAI_IMAGE_MODEL=gpt-image-2
+```
+
+> `.env`에는 비밀 API 키가 들어갑니다. GitHub, 메신저, 이메일 등에 공유하지 마세요.
+
+### 5. 브랜드 정보 작성
+
+`brief.json`에서 다음 정보를 원하는 브랜드에 맞게 수정합니다.
+
+```json
+{
+  "industry": "브랜드 업종",
+  "target": "주요 고객",
+  "keywords": ["핵심", "키워드"],
+  "tone": "브랜드가 말하는 분위기",
+  "description": "서비스 설명"
+}
+```
+
+### 6. 실행
+
+```bash
+python main.py
+```
+
+실행이 끝나면 `output` 폴더에서 JSON 결과와 PNG 이미지를 확인할 수 있습니다. 이미지 생성 API를 사용하므로 실행 시 API 사용량이 발생할 수 있습니다.
+
+## 팀 역할
+
+| 영역 | 담당 기능 | 파일 |
 |---|---|---|
-| 01. AI 도구 학습 | 1개월 | 생성형 AI, 자동화 도구 활용 |
-| 02. AI 활용 학습 | 1개월 | 개발환경, 언어, AI 코딩도구 |
-| 03. AI 응용 학습 | 3개월 + Final-Project | 협업 중심 실전 서비스 개발, 팀 단위 AI Agent Final-Project |
+| 통합 | 브리프 입력, 전체 실행, 결과 저장 | `main.py` |
+| 네이밍 | 브랜드명과 슬로건 생성 | `Naming.py` |
+| 콘텐츠 | 브랜드 스토리 생성 | `content.py` |
+| 비주얼 | 컬러 팔레트와 로고 생성 | `visual.py` |
 
-## 폴더 구조
+## 현재 테스트 결과
 
-각 단계 폴더 아래에 차시별 폴더를 만들고, 그 안은 아래 3분류로 통일합니다.
+- 전체 파이프라인 정상 종료
+- 브랜드명 후보 5개 및 슬로건 3개 생성 확인
+- 브랜드 스토리와 컬러 데이터 생성 확인
+- 컬러 팔레트 및 로고 PNG 2개 생성 확인
+- 최종 `brand_result.json` 저장 확인
 
-```
-01. AI 도구 학습/
-  <차시 번호>. <차시명>/
-    materials/   전달받은 강의자료·참고자료 (원본)
-    output/      직접 만든 결과물
-    assets/      결과물 제작에 쓰인 이미지 등 리소스
-02. AI 활용 학습/
-03. AI 응용 학습/
-기타/            과정 외 부가 자료 (특강 등)
-```
+## 보안 안내
 
-새 차시가 시작되면 `<차시 번호>. <차시명>/materials`, `output`, `assets` 3개 폴더를 만들고 시작하면 됩니다.
+- 실제 `.env` 파일은 `.gitignore`로 제외되어 있습니다.
+- 팀원은 각자 발급받은 API 키를 사용해야 합니다.
+- 공개된 키가 있다면 즉시 폐기하고 새 키를 발급하세요.
 
-Python 프로젝트가 결과물인 미션은 `scripts/new_mission.py`로 반복 작업을 자동화합니다.
+---
 
-**`new` — 세션 폴더 + 표준 파이썬 프로젝트 스캐폴딩**
-
-```bash
-python scripts/new_mission.py new 02 "02. Python 심화" todo-cli \
-  --description "터미널 할 일 관리 프로그램" --github
-```
-
-`<stage> <session_name> <project_name>` 순서로 받아 `output/<project_name>/`에 표준 파이썬 프로젝트(`main.py` + 패키지 + `.gitignore` + `LICENSE` + 목차·기능·설계 노트 구간이 있는 `README.md`)를 만들고 git init·첫 커밋까지 수행합니다. `--github`를 주면 GitHub 저장소 생성과 push까지 이어서 합니다. 이 프로젝트 경로는 자체 GitHub 저장소로 별도 관리되므로 루트 `.gitignore`에 자동으로 추가됩니다.
-
-**`env-doc` — 개발 환경 증빙을 README에 자동 반영**
-
-```bash
-python scripts/new_mission.py env-doc "02. AI 활용 학습/01. Python 및 Git 기초/output/prompt-manager" --write
-```
-
-`python -V`, `git --version`, `git config user.name/email`, `git log --oneline --graph --all` 실행 결과를 모아 README의 `<!-- ENV_EVIDENCE_START -->` ~ `<!-- ENV_EVIDENCE_END -->` 구간에 채워 넣습니다(마커가 없으면 "개발 환경 확인" 섹션을 새로 추가). `--write` 없이 실행하면 마크다운을 화면에 출력만 합니다. 커밋을 더 쌓은 뒤 다시 실행해도 마커 구간만 교체되어 중복되지 않습니다.
-
-## 진행 현황
-
-- [x] 01 - 02. 멀티모달 콘텐츠 제작
-- [x] 01 - 04. AI기반 UIUX 디자인 시안 제작
-- [x] 02 - 01. Python 및 Git 기초 — [prompt-manager](https://github.com/Frost0313z/prompt-manager)
-- [x] 02 - 02. Python 응용 API 활용 국내 여행지 추천 프로그램 개발 — [travel-planner](https://github.com/Frost0313z/travel-planner)
-- [x] 02 - 03. AI 웹 개발 — [fridge-chef](https://github.com/Frost0313z/fridge-chef) *(Vercel 배포 예정)*
-- [ ] 03. AI 응용 학습 (예정)
-
-새 차시를 추가할 때마다 이 목록을 갱신합니다.
+코디세이 AI Native Advanced · Term Project A
