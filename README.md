@@ -12,9 +12,9 @@
 
 | 로고 시안 1 | 로고 시안 2 |
 |---|---|
-| ![로고 시안 1](02.%20AI%20활용%20학습/팀프로젝트/output/logo_01.png) | ![로고 시안 2](02.%20AI%20활용%20학습/팀프로젝트/output/logo_02.png) |
+| ![로고 시안 1](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/logo_01.png) | ![로고 시안 2](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/logo_02.png) |
 
-![한글 폰트가 적용된 브랜드 컬러 팔레트](02.%20AI%20활용%20학습/팀프로젝트/output/color_palette.png?v=2)
+![한글 폰트가 적용된 브랜드 컬러 팔레트](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/color_palette.png?v=3)
 
 ## 주요 기능
 
