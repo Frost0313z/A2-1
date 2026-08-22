@@ -14,7 +14,9 @@
 |---|---|
 | ![로고 시안 1](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/logo_01.png) | ![로고 시안 2](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/logo_02.png) |
 
-![한글 폰트가 적용된 브랜드 컬러 팔레트](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/color_palette.png?v=3)
+### 브랜드 컬러 팔레트
+
+![브랜드 컬러 팔레트 - 한글 적용](https://raw.githubusercontent.com/Frost0313z/A2-1/master/02.%20AI%20%ED%99%9C%EC%9A%A9%20%ED%95%99%EC%8A%B5/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/output/brand_color_palette_ko.png)
 
 ## 주요 기능
 
@@ -55,6 +57,7 @@ output/brand_result.json + PNG 결과물
 ├── requirements.txt        # 필요한 파이썬 패키지
 └── output/
     ├── brand_result.json
+    ├── brand_color_palette_ko.png
     ├── color_palette.png
     ├── logo_01.png
     └── logo_02.png
